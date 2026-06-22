@@ -39,3 +39,8 @@ export const downloadButtonStyle = css({
     opacity: 0.8,
   },
 })
+
+export const errorTextStyle = css({
+  color: 'red.600',
+  fontSize: 'sm',
+})

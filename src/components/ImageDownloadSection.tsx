@@ -4,6 +4,7 @@ import {
   containerStyle,
   diagramWrapperStyle,
   downloadButtonStyle,
+  errorTextStyle,
 } from '../styles/imageDownloadStyles'
 
 type ImageDownloadSectionProps = {
@@ -21,6 +22,7 @@ export function ImageDownloadSection({
 }: ImageDownloadSectionProps) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const [isDownloading, setIsDownloading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const handleDownload = async () => {
     if (!wrapperRef.current || isDownloading) {
@@ -28,6 +30,7 @@ export function ImageDownloadSection({
     }
 
     setIsDownloading(true)
+    setErrorMessage(null)
 
     try {
       const dataUrl = await toPng(wrapperRef.current, {
@@ -40,7 +43,11 @@ export function ImageDownloadSection({
       const link = document.createElement('a')
       link.download = fileName
       link.href = dataUrl
+      document.body.appendChild(link)
       link.click()
+      document.body.removeChild(link)
+    } catch {
+      setErrorMessage('画像の生成に失敗しました。もう一度お試しください。')
     } finally {
       setIsDownloading(false)
     }
@@ -59,6 +66,7 @@ export function ImageDownloadSection({
       >
         {isDownloading ? loadingText : buttonText}
       </button>
+      {errorMessage && <p className={errorTextStyle}>{errorMessage}</p>}
     </section>
   )
 }
