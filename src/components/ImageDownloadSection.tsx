@@ -12,6 +12,7 @@ type ImageDownloadSectionProps = {
   fileName?: string
   buttonText?: string
   loadingText?: string
+  backgroundColor?: string
 }
 
 export function ImageDownloadSection({
@@ -19,6 +20,7 @@ export function ImageDownloadSection({
   fileName = 'sequence-diagram.png',
   buttonText = 'PNGをダウンロード',
   loadingText = '生成中...',
+  backgroundColor = '#ffffff',
 }: ImageDownloadSectionProps) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const [isDownloading, setIsDownloading] = useState(false)
@@ -37,16 +39,20 @@ export function ImageDownloadSection({
         cacheBust: true,
         quality: 1.0,
         pixelRatio: 2,
-        backgroundColor: '#ffffff',
+        backgroundColor,
       })
 
       const link = document.createElement('a')
       link.download = fileName
       link.href = dataUrl
       document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-    } catch {
+      try {
+        link.click()
+      } finally {
+        document.body.removeChild(link)
+      }
+    } catch (error) {
+      console.error(error)
       setErrorMessage('画像の生成に失敗しました。もう一度お試しください。')
     } finally {
       setIsDownloading(false)
