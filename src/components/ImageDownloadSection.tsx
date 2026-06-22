@@ -44,6 +44,7 @@ export function ImageDownloadSection({
 
       const link = document.createElement('a')
       link.download = fileName
+      // toPng returns a data URL, so revokeObjectURL is not required.
       link.href = dataUrl
       document.body.appendChild(link)
       try {
@@ -52,7 +53,7 @@ export function ImageDownloadSection({
         document.body.removeChild(link)
       }
     } catch (error) {
-      console.error(error)
+      console.error('Failed to generate PNG image:', error)
       setErrorMessage('画像の生成に失敗しました。もう一度お試しください。')
     } finally {
       setIsDownloading(false)
