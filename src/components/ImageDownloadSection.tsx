@@ -44,12 +44,13 @@ export function ImageDownloadSection({
 
       const link = document.createElement('a')
       link.download = fileName
-      // toPng returns a data URL, so revokeObjectURL is not required.
+      // toPng returns a data URL (not a blob URL), so revokeObjectURL is not applicable.
       link.href = dataUrl
       document.body.appendChild(link)
       try {
         link.click()
       } finally {
+        // Ensure cleanup even if click throws.
         document.body.removeChild(link)
       }
     } catch (error) {
