@@ -15,6 +15,7 @@
     "ci": "npm run format:check && npm run lint"
   },
   "dependencies": {
+    "dompurify": "^3.4.15",
     "html-to-image": "^1.11.13",
     "mermaid": "^11.6.0",
     "react": "^19.0.0",
