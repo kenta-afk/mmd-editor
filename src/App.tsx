@@ -1,5 +1,6 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import mermaid from "mermaid";
+import DOMPurify from "dompurify";
 import { ImageDownloadSection } from "./components/ImageDownloadSection";
 
 type Preset = {
@@ -67,6 +68,13 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [isRendering, setIsRendering] = useState(true);
   const renderId = useId().replace(/:/g, "");
+  const cleanSvg = useMemo(
+    () =>
+      DOMPurify.sanitize(svg, {
+        USE_PROFILES: { svg: true, svgFilters: true },
+      }),
+    [svg]
+  );
 
   useEffect(() => {
     let alive = true;
@@ -216,7 +224,7 @@ function App() {
               ) : (
                 <div
                   className="diagram-svg"
-                  dangerouslySetInnerHTML={{ __html: svg }}
+                  dangerouslySetInnerHTML={{ __html: cleanSvg }}
                 />
               )}
             </div>
